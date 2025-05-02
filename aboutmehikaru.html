@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alex Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            font-size: 18px;
+            position: fixed;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #ff6b6b;
+            transition: width .3s;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0 20px;
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 5px solid #ff6b6b;
+            background: url('blt.jpg') center/cover no-repeat;
+            margin-bottom: 20px;
+            animation: glow 2s infinite alternate, rotate 20s linear infinite;
+            box-shadow: 0 0 20px #ff6b6b;
+            cursor: pointer;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 20px #ff6b6b;
+                transform: scale(1);
+            }
+            to {
+                box-shadow: 0 0 40px #ff6b6b;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 48px;
+        }
+
+        h2 {
+            font-size: 32px;
+            color: #ff6b6b;
+            height: 40px;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #aaa;
+            max-width: 600px;
+        }
+
+        .social {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social a {
+            color: #fff;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .btn:hover {
+            background: #ff6b6b;
+            color: #000;
+        }
+
+        .typing {
+            border-right: 2px solid #ff6b6b;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #ff6b6b; }
+        }
+
+        section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .skill {
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .skill-name {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            background: #333;
+            border-radius: 30px;
+            overflow: hidden;
+            height: 30px;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            background: #ff6b6b;
+            height: 100%;
+            width: 0;
+            border-radius: 30px;
+            text-align: right;
+            padding-right: 10px;
+            box-sizing: border-box;
+            color: #fff;
+            font-size: 14px;
+            line-height: 30px;
+            transition: width 2s;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #preloader .loader {
+            font-size: 24px;
+            color: #ff6b6b;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.2; transform: scale(1); }
+        }
+
+        #preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+    </style>
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader">
+    <div class="loader">Welcome to My Portfolio...</div>
+</div>
+
+<!-- Particles Canvas -->
+<canvas id="particles-js"></canvas>
+
+<!-- Navigation Bar -->
+<nav>
+    <a href="#home" class="active">Home</a>
+    <a href="#services">Services</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#games">Games</a>
+</nav>
+
+<!-- Home Section -->
+<div class="container" id="home">
+    <div class="profile-img" id="dogImage"></div>
+    <h1>Hi, I'm <span style="color: #ff6b6b;">Hikaru</span></h1>
+    <h2 class="typing"></h2>
+    <p>Except for hard work, there is suffering. Dislike in common, suffering holds misery, there is merit in denial, error, disability, questioning, no, worse here.</p>
+    <div class="social">
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+    </div>
+    <a href="https://wa.me/62881027334067" class="btn" target="_blank">Hire me</a>
+</div>
+
+<!-- Services Section -->
+<section id="services">
+    <h1 style="font-size: 48px; color: #ff6b6b; margin-bottom: 20px;">My Services</h1>
+    <p style="max-width: 800px; margin: 0 auto; color: #aaa; font-size: 18px;">
+        I provide a range of services including Web Development, Mobile App Development, Reverse Engineering & Debugging, and Cybersecurity Consulting.
+    </p>
+</section>
+
+<!-- Skills Section -->
+<section id="skills">
+    <h1 style="font-size: 48px; color: #ff6b6b; margin-bottom: 40px;">My Skills</h1>
+    <div class="skill">
+        <div class="skill-name">HTML</div>
+        <div class="progress-bar"><div class="progress-bar-fill" data-percent="90">0%</div></div>
+    </div>
+    <div class="skill">
+        <div class="skill-name">CSS</div>
+        <div class="progress-bar"><div class="progress-bar-fill" data-percent="80">0%</div></div>
+    </div>
+    <div class="skill">
+        <div class="skill-name">JavaScript</div>
+        <div class="progress-bar"><div class="progress-bar-fill" data-percent="75">0%</div></div>
+    </div>
+    <div class="skill">
+        <div class="skill-name">Reverse Engineering</div>
+        <div class="progress-bar"><div class="progress-bar-fill" data-percent="85">0%</div></div>
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section id="experience">
+    <h1 style="font-size: 48px; color: #ff6b6b; margin-bottom: 40px;">My Experience</h1>
+    <p style="color: #aaa; font-size: 18px;">Experience details go here...</p>
+</section>
+
+    <!-- Games Section -->
+<section id="games" style="background: #000; padding: 60px 20px;">
+    <h1 style="font-size: 48px; color: #ff0040; margin-bottom: 40px; text-align: center; text-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;">GAMES</h1>
+    <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;">
+        <!-- Mobile Legends -->
+        <div style="background: #0a0a0a; border-radius: 20px; padding: 20px; box-shadow: 0 0 25px rgba(255, 0, 64, 0.8); text-align: center; border: 2px solid #ff0040;">
+            <img src="ml.jpg" alt="Mobile Legends" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #ff0040; box-shadow: 0 0 30px #ff0040; margin-bottom: 15px;">
+            <h2 style="color: #ff0040; margin: 10px 0; text-shadow: 0 0 10px #ff0040;">Mobile Legends</h2>
+            <span style="display: inline-block; padding: 8px 20px; border: 2px solid #ff0040; border-radius: 10px; color: #ff0040; font-size: 14px; text-shadow: 0 0 8px #ff0040;">MOBA</span>
+        </div>
+
+        <!-- PUBG -->
+        <div style="background: #0a0a0a; border-radius: 20px; padding: 20px; box-shadow: 0 0 25px rgba(255, 0, 64, 0.8); text-align: center; border: 2px solid #ff0040;">
+            <img src="pubg.jpg" alt="PUBG" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #ff0040; box-shadow: 0 0 30px #ff0040; margin-bottom: 15px;">
+            <h2 style="color: #ff0040; margin: 10px 0; text-shadow: 0 0 10px #ff0040;">PUBG</h2>
+            <span style="display: inline-block; padding: 8px 20px; border: 2px solid #ff0040; border-radius: 10px; color: #ff0040; font-size: 14px; text-shadow: 0 0 8px #ff0040;">Battle Royale</span>
+        </div>
+
+        <!-- Call of Duty -->
+        <div style="background: #0a0a0a; border-radius: 20px; padding: 20px; box-shadow: 0 0 25px rgba(255, 0, 64, 0.8); text-align: center; border: 2px solid #ff0040;">
+            <img src="codm.jpg" alt="Call of Duty" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #ff0040; box-shadow: 0 0 30px #ff0040; margin-bottom: 15px;">
+            <h2 style="color: #ff0040; margin: 10px 0; text-shadow: 0 0 10px #ff0040;">Call of Duty</h2>
+            <span style="display: inline-block; padding: 8px 20px; border: 2px solid #ff0040; border-radius: 10px; color: #ff0040; font-size: 14px; text-shadow: 0 0 8px #ff0040;">Battle Royale</span>
+        </div>
+    </div>
+</section>
+    
+<!-- JavaScript for Particles.js and Effects -->
+<script>
+    // Particles.js Initialization
+    particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 100,
+                density: {
+                    enable: true,
+                    value_area: 800
+                }
+            },
+            color: {
+                value: '#ff6b6b'
+            },
+            shape: {
+                type: 'circle'
+            },
+            opacity: {
+                value: 0.5,
+                random: true
+            },
+            size: {
+                value: 3,
+                random: true
+            },
+            move: {
+                enable: true,
+                speed: 2
+            }
+        },
+        interactivity: {
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'repulse'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                }
+            },
+            modes: {
+                repulse: { distance: 100 },
+                push: { particles_nb: 4 }
+            }
+        }
+    });
+
+    // Typing effect
+    const typingElement = document.querySelector('.typing');
+    const text = 'Im Reverse Engineering';
+    let index = 0;
+    function type() {
+        if (index < text.length) {
+            typingElement.innerHTML += text.charAt(index);
+            index++;
+            setTimeout(type, 100);
+        }
+    }
+    window.onload = type;
+
+    // Audio toggle on image click
+    const dogImage = document.getElementById('dogImage');
+    const audio = new Audio('abc.mp3');
+    let isPlaying = false;
+
+    dogImage.addEventListener('click', () => {
+        if (!isPlaying) {
+            audio.play();
+            isPlaying = true;
+        } else {
+            audio.pause();
+            audio.currentTime = 0;
+            isPlaying = false;
+        }
+    });
+
+    // Animate skill bars
+    const fills = document.querySelectorAll('.progress-bar-fill');
+    function animateBars() {
+        fills.forEach(fill => {
+            const percent = fill.getAttribute('data-percent');
+            fill.style.width = percent + '%';
+            fill.textContent = percent + '%';
+        });
+    }
+    window.addEventListener('scroll', animateBars);
+    window.addEventListener('load', animateBars);
+
+    // Preloader logic
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('preloader');
+        preloader.classList.add('hide');
+    });
+</script>
+
+</body>
+</html>
